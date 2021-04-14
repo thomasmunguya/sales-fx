@@ -1,0 +1,15 @@
+/*Main Class*/
+.mainFxmlClass {
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-font-size: 13px;
+}
+
+
+.navigationBtn{
+     -fx-background-color: #5b86e5;
+     -fx-text-fill: #ffffff;
+     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.7) , 10,0,0,1 );
+}
+
+.
+
