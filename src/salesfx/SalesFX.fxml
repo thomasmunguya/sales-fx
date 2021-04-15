@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="400.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="salesfx.SalesFXController">
    <children>
-      <HBox prefHeight="64.0" prefWidth="505.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" />
+      <HBox fx:id="hBoxBlueDecor" prefHeight="64.0" prefWidth="505.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" />
       <VBox fx:id="vBoxEmployeeInfo" layoutX="22.0" layoutY="24.0" spacing="10.0">
          <children>
             <Label fx:id="labelEmployeeInfo" text="Employee Information" textFill="#fffefe">
@@ -28,7 +28,7 @@
             <TextField fx:id="textFieldPosition" editable="false" />
          </children>
       </VBox>
-      <HBox fx:id="hBoxNavigationButtons" layoutX="70.0" layoutY="328.0" spacing="5.0">
+      <HBox fx:id="hBoxNavigationPane" layoutX="70.0" layoutY="328.0" spacing="5.0">
          <children>
             <Button fx:id="buttonFirst" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="First" />
             <Button fx:id="buttonPrevious" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Previous" />
@@ -36,11 +36,11 @@
             <Button fx:id="buttonLast" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Last" />
          </children>
       </HBox>
-      <VBox fx:id="hBoxModifications" layoutX="366.0" layoutY="90.0" spacing="5.0">
+      <VBox fx:id="vBoxModifiersPane" layoutX="366.0" layoutY="90.0" spacing="5.0">
          <children>
-            <Button fx:id="buttonModifyEmployee" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #5CB55B;" text="Update Employee" />
-            <Button fx:id="buttonAddEmployee" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #5CB55B;" text="Add Employee" />
-            <Button fx:id="buttonDeleteEmployee" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" text="Delete Employee" />
+            <Button fx:id="buttonModifier1" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #5CB55B;" text="Modify Employee" />
+            <Button fx:id="buttonModifier2" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #5CB55B;" text="Add Employee" />
+            <Button fx:id="buttonModifier3" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" text="Delete Employee" />
          </children>
       </VBox>
       <Button fx:id="buttonSearch" layoutX="213.0" layoutY="364.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Search" />
