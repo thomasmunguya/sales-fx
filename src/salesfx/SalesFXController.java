@@ -14,6 +14,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -68,11 +70,13 @@ public class SalesFXController implements Initializable {
     private Button buttonModifier3;
     
     private ArrayList<Employee> employees;
-    private static int currentIndex = 0;
+    private static IntegerProperty currentIndex = new SimpleIntegerProperty(0);
     private final Alert invalidInput  = new Alert(Alert.AlertType.ERROR);
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        buttonPrevious.setDisable(true);
+        buttonFirst.setDisable(true);
         loadList();
         setUpEventHandlers();
         disableOrEnableNavButtons();
@@ -102,8 +106,8 @@ public class SalesFXController implements Initializable {
         buttonPrevious.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                currentIndex--;
-                Employee employee = navigateEmployeesList(currentIndex);
+                currentIndex.setValue(currentIndex.intValue()  - 1);
+                Employee employee = navigateEmployeesList(currentIndex.intValue());
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());
             }
@@ -112,8 +116,8 @@ public class SalesFXController implements Initializable {
         buttonFirst.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                currentIndex = 0;
-                Employee employee = navigateEmployeesList(currentIndex);
+                currentIndex.setValue(0);
+                Employee employee = navigateEmployeesList(currentIndex.intValue());
                 textFieldId.setText(employee.getId() + "");
                 textFieldName.setText(employee.getName());
                 textFieldCity.setText(employee.getCity());
@@ -124,9 +128,9 @@ public class SalesFXController implements Initializable {
         buttonNext.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                currentIndex++;
+                currentIndex.setValue(currentIndex.intValue() + 1);
                 System.out.println(currentIndex);
-                Employee employee = navigateEmployeesList(currentIndex);
+                Employee employee = navigateEmployeesList(currentIndex.intValue());
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());
             }
@@ -135,8 +139,8 @@ public class SalesFXController implements Initializable {
         buttonLast.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                currentIndex = employees.size() - 1;
-                Employee employee = navigateEmployeesList(currentIndex);
+                currentIndex.setValue(employees.size() - 1);
+                Employee employee = navigateEmployeesList(currentIndex.intValue());
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());
             }
@@ -151,7 +155,7 @@ public class SalesFXController implements Initializable {
                     buttonModifier1.setText("Modify Employee");
                     buttonModifier2.setText("Add Employee");
                     
-                    Employee employee = navigateEmployeesList(currentIndex);
+                    Employee employee = navigateEmployeesList(currentIndex.intValue());
                     
                     populateTextFields(employee.getId() + "", employee.getName(), employee.getCity(), employee.getPosition());
                     
@@ -232,7 +236,7 @@ public class SalesFXController implements Initializable {
                     buttonModifier2.setText("Add Employee");
                     buttonModifier3.setText("Delete Employee");
                     
-                    Employee employee = navigateEmployeesList(currentIndex);
+                    Employee employee = navigateEmployeesList(currentIndex.intValue());
                     
                     populateTextFields(employee.getId() + "", employee.getName(), employee.getCity(), employee.getPosition());
                     
@@ -287,29 +291,24 @@ public class SalesFXController implements Initializable {
      */
     private void disableOrEnableNavButtons() {
    
-        //if the index is 0 disable the first and previous navigation buttons
-        buttonPrevious.disabledProperty().addListener(new InvalidationListener() {
+        currentIndex.addListener(new InvalidationListener() {
             @Override
-            public void invalidated(Observable ov) {
-                if(currentIndex == 0) {
-                    buttonPrevious.setDisable(true);
+            public void invalidated(Observable observable) {
+                if (currentIndex.intValue() == 0) {
                     buttonFirst.setDisable(true);
+                    buttonPrevious.setDisable(true);
                 }
+                
                 else {
-                    buttonPrevious.setDisable(false);
                     buttonFirst.setDisable(false);
+                    buttonPrevious.setDisable(false);
                 }
-            }
-        });
-        
-        //if the index is the last index in the employee list disable the next and last navigation buttons
-        buttonPrevious.disabledProperty().addListener(new InvalidationListener() {
-            @Override
-            public void invalidated(Observable ov) {
-                if(currentIndex == employees.size() - 1) {
+                
+                if(currentIndex.intValue() == employees.size() - 1) {
                     buttonNext.setDisable(true);
-                    buttonLast.setDisable(true);
+                    buttonLast.setDisable(true); 
                 }
+                
                 else {
                     buttonNext.setDisable(false);
                     buttonLast.setDisable(false);
@@ -360,7 +359,7 @@ public class SalesFXController implements Initializable {
                return;
             
             employees.remove(currentIndex);
-            employees.add(currentIndex, new Employee(id, name, city, position));
+            employees.add(currentIndex.intValue(), new Employee(id, name, city, position));
             
             Alert successfulUpdate = new Alert(Alert.AlertType.INFORMATION);
             successfulUpdate.setHeaderText("Update Successful");
@@ -388,7 +387,7 @@ public class SalesFXController implements Initializable {
            }
            
            employees.add(new Employee(id, name, city, position));
-           currentIndex = employees.size() - 1;
+           currentIndex.setValue(employees.size() - 1);
            
            
            textFieldId.setText(id + "");
@@ -476,22 +475,22 @@ public class SalesFXController implements Initializable {
             
             if(employees.size() == 1) {
                 employees.remove(currentIndex);
-                currentIndex--;
+                currentIndex.setValue(currentIndex.intValue()  - 1);
                 populateTextFields("", "", "", "");
                 return;
             }
             
             employees.remove(currentIndex);
-            currentIndex--;
-            if(currentIndex == -1) {
-                currentIndex++;
-                Employee employee = navigateEmployeesList(currentIndex);
+            currentIndex.setValue(currentIndex.intValue()  - 1);
+            if(currentIndex.intValue() == -1) {
+                currentIndex.setValue(currentIndex.intValue() + 1);
+                Employee employee = navigateEmployeesList(currentIndex.intValue());
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());  
             }
                 
             else {
-                Employee employee = navigateEmployeesList(currentIndex);
+                Employee employee = navigateEmployeesList(currentIndex.intValue());
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());
             }
