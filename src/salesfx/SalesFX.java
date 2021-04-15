@@ -7,6 +7,7 @@ package salesfx;
 
 import content.Employee;
 import content.EmployeeFile;
+import content.SearchStage;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -99,7 +100,9 @@ public class SalesFX extends Application {
     
     private HBox hBoxBlueDecor;
     
-    private static ArrayList<Employee> employees;
+    private SearchStage searchStageInstance;
+    
+    public static ArrayList<Employee> employeeList;
     private static int currentIndex = 0;
     private final Alert invalidInput  = new Alert(AlertType.ERROR);
 
@@ -151,6 +154,7 @@ public class SalesFX extends Application {
         lblSalesFX.setLayoutX(334.0);
         lblSalesFX.setLayoutY(14.0);
         lblSalesFX.setTextFill(Paint.valueOf("#fcfcfc"));
+        
        
         setUpRootPane();
         Scene scene = new Scene(rootPane, 505, 400);
@@ -160,6 +164,18 @@ public class SalesFX extends Application {
         primaryStage.show();
         loadList();
         setUpEventHandlers();
+        
+        btnSearch.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                searchStageInstance = SearchStage.loadSearchStage();
+                Scene scene =  new Scene(searchStageInstance.setUpSearchScene(), 505, 400);
+                Stage searchStage = new Stage();
+                searchStage.setScene(scene);
+                searchStage.show();
+               
+            }
+        } );
     }
 
     /**
@@ -249,6 +265,7 @@ public class SalesFX extends Application {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list.");
+                    outOfBounds.show();
                     return;
                 }
                 currentIndex--;
@@ -265,6 +282,7 @@ public class SalesFX extends Application {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list.");
+                    outOfBounds.show();
                     return;
                 }
                 currentIndex  = 0;
@@ -279,10 +297,11 @@ public class SalesFX extends Application {
         btnNext.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(currentIndex == employees.size() - 1) {
+                if(currentIndex == employeeList.size() - 1) {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list");
+                    outOfBounds.show();
                     return;
                 }
                 currentIndex++;
@@ -296,13 +315,14 @@ public class SalesFX extends Application {
         btnLast.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) { 
-                if(currentIndex == employees.size() - 1) {
+                if(currentIndex == employeeList.size() - 1) {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list");
+                    outOfBounds.show();
                     return;
                 }
-                currentIndex = employees.size() - 1;
+                currentIndex = employeeList.size() - 1;
                 Employee employee = navigateEmployeesList(currentIndex);
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());
@@ -416,13 +436,13 @@ public class SalesFX extends Application {
     }
     
     /**
-     * Loads the employees list with data from the Employee.dat file
+     * Loads the employeeList list with data from the Employee.dat file
      */
     private void loadList() {
         
         try {
             
-            employees = EmployeeFile.readFromFile();
+            employeeList = EmployeeFile.readFromFile();
             
         } catch (IOException ex) {
             
@@ -434,8 +454,8 @@ public class SalesFX extends Application {
             
         }
         
-        populateTextFields(employees.get(0).getId() + "", employees.get(0).getName(),
-                        employees.get(0).getCity(), employees.get(0).getPosition());
+        populateTextFields(employeeList.get(0).getId() + "", employeeList.get(0).getName(),
+                        employeeList.get(0).getCity(), employeeList.get(0).getPosition());
       
         
     }
@@ -446,7 +466,7 @@ public class SalesFX extends Application {
      * @param index the index of the employee in the list
      */
     private Employee navigateEmployeesList(int index) {
-        return employees.get(index);
+        return employeeList.get(index);
     }
    
     
@@ -490,8 +510,8 @@ public class SalesFX extends Application {
             if(!isValidInput())
                return;
             
-            employees.remove(currentIndex);
-            employees.add(currentIndex, new Employee(id, name, city, position));
+            employeeList.remove(currentIndex);
+            employeeList.add(currentIndex, new Employee(id, name, city, position));
             
             Alert successfulUpdate = new Alert(Alert.AlertType.INFORMATION);
             successfulUpdate.setHeaderText("Update Successful");
@@ -518,8 +538,8 @@ public class SalesFX extends Application {
                return;
            }
            
-           employees.add(new Employee(id, name, city, position));
-           currentIndex = employees.size() - 1;
+           employeeList.add(new Employee(id, name, city, position));
+           currentIndex = employeeList.size() - 1;
            
            
            txtId.setText(id + "");
@@ -595,8 +615,8 @@ public class SalesFX extends Application {
         Optional<ButtonType> choice = confirmAdd.showAndWait();
         
         if(choice.get() == ButtonType.OK) {
-            //if the employees list is empty display a deletion error
-            if(employees.isEmpty()) {
+            //if the employeeList list is empty display a deletion error
+            if(employeeList.isEmpty()) {
                 System.out.println("The list is empty now");
                 Alert deleteFailure = new Alert(Alert.AlertType.ERROR);
                 deleteFailure.setHeaderText("Deletion Failed");
@@ -605,14 +625,14 @@ public class SalesFX extends Application {
                 return;
             }
             
-            if(employees.size() == 1) {
-                employees.remove(currentIndex);
+            if(employeeList.size() == 1) {
+                employeeList.remove(currentIndex);
                 currentIndex--;
                 populateTextFields("", "", "", "");
                 return;
             }
             
-            employees.remove(currentIndex);
+            employeeList.remove(currentIndex);
             currentIndex--;
             if(currentIndex == -1) {
                 currentIndex++;
@@ -661,6 +681,7 @@ public class SalesFX extends Application {
         
         return true;
     }  
+    
    
     
 }

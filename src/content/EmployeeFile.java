@@ -19,18 +19,25 @@ public class EmployeeFile {
     private static ArrayList<Employee> employees = new ArrayList();
     
     public static ArrayList<Employee> readFromFile() throws IOException {
+        
        fileScanner = new Scanner(employeeFile);
+       
        if(employeeFile.exists()) {
            while(fileScanner.hasNextLine()) {
+               
                StringBuilder employeeInfoStringBuilder = new StringBuilder().append(fileScanner.nextLine());
                employeeInfoStringBuilder.deleteCharAt(0);
                employeeInfoStringBuilder.deleteCharAt(employeeInfoStringBuilder.length() - 1);
-               StringTokenizer tokenizer = new StringTokenizer(employeeInfoStringBuilder.toString(), ", ");
+               
+               StringTokenizer tokenizer = new StringTokenizer(employeeInfoStringBuilder.toString(), ",");
+               
                while(tokenizer.hasMoreTokens()) {
-                   int id = Integer.parseInt(tokenizer.nextToken());
-                   String name = tokenizer.nextToken();
-                   String city = tokenizer.nextToken();
-                   String position = tokenizer.nextToken();
+                   
+                   int id = Integer.parseInt(tokenizer.nextToken().trim());
+                   String name = tokenizer.nextToken().trim();
+                   String city = tokenizer.nextToken().trim();
+                   String position = tokenizer.nextToken().trim();
+                   
                    employees.add(new Employee(id, name, city, position));
                    break;
                }
