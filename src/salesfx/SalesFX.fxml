@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -10,7 +11,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="rootPane" prefHeight="400.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="salesfx.SalesFXController">
    <children>
-      <HBox fx:id="hBoxBlueDecor" prefHeight="64.0" prefWidth="505.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" />
+      <HBox fx:id="hBoxBlueDecor" prefHeight="64.0" prefWidth="505.0" style="-fx-background-color: #2D75E8;" stylesheets="@../assets/css/login.css" />
       <VBox fx:id="vBoxEmployeeInfo" layoutX="22.0" layoutY="24.0" spacing="10.0">
          <children>
             <Label fx:id="labelEmployeeInfo" text="Employee Information" textFill="#fffefe">
@@ -30,17 +31,36 @@
       </VBox>
       <HBox fx:id="hBoxNavigationPane" layoutX="70.0" layoutY="328.0" spacing="5.0">
          <children>
-            <Button fx:id="buttonFirst" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="First" />
-            <Button fx:id="buttonPrevious" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Previous" />
-            <Button fx:id="buttonNext" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Next" />
+            <Button fx:id="buttonFirst" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="modifierbutton2" stylesheets="@../assets/css/styles.css" text="First" />
+            <Button fx:id="buttonPrevious" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" stylesheets="@../assets/css/styles.css" text="Previous">
+               <styleClass>
+                  <String fx:value="Buttons" />
+                  <String fx:value="modifierbutton2" />
+               </styleClass></Button>
+            <Button fx:id="buttonNext" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" text="Next" />
             <Button fx:id="buttonLast" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Last" />
          </children>
       </HBox>
       <VBox fx:id="vBoxModifiersPane" layoutX="366.0" layoutY="90.0" spacing="5.0">
          <children>
-            <Button fx:id="buttonModifier1" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #5CB55B;" text="Modify Employee" />
-            <Button fx:id="buttonModifier2" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" style="-fx-background-color: #5CB55B;" text="Add Employee" />
-            <Button fx:id="buttonModifier3" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" text="Delete Employee" />
+            <Button fx:id="buttonModifier1" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" stylesheets="@../assets/css/styles.css" text="Modify Employee" textFill="#fafafa">
+               <font>
+                  <Font name="Arial" size="12.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="Buttons" />
+                  <String fx:value="modifierbutton1" />
+               </styleClass></Button>
+            <Button fx:id="buttonModifier2" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" stylesheets="@../assets/css/styles.css" text="Add Employee">
+               <styleClass>
+                  <String fx:value="modifierbutton2" />
+                  <String fx:value="Buttons" />
+               </styleClass></Button>
+            <Button fx:id="buttonModifier3" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="114.0" stylesheets="@../assets/css/styles.css" text="Delete Employee">
+               <styleClass>
+                  <String fx:value="modifierbutton3" />
+                  <String fx:value="Buttons" />
+               </styleClass></Button>
          </children>
       </VBox>
       <Button fx:id="buttonSearch" layoutX="213.0" layoutY="364.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Search" />

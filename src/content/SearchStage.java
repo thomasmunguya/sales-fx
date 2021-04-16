@@ -5,13 +5,18 @@
  */
 package content;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import salesfx.SalesFX;
 
 /**
@@ -60,7 +65,7 @@ public class SearchStage {
     private TextField txtCity = new TextField();
 
     
-    private Label lblSearchResultNum = new Label("1000 search results found");
+    private Label lblSearchResultNum = new Label();
 
     
     private HBox hBoxNavigation = new HBox();
@@ -93,7 +98,7 @@ public class SearchStage {
     
     private AnchorPane rootPane = new AnchorPane();
     
-    private ArrayList<Employee> searchResults;
+    private ArrayList<Employee> searchResults = new ArrayList();
     private static ArrayList<Employee> employeeList = SalesFX.employeeList;
     private static int currentIndex = 0;
     private static SearchStage searchStage;
@@ -110,6 +115,14 @@ public class SearchStage {
     }
     
     public AnchorPane setUpSearchScene() {
+        
+        lblSearchFilter.setFont(new Font("arial", 14));
+        lblSearchResultNum.setFont(new Font("arial", 14));
+        lblId.setFont(new Font("arial", 14));
+        lblName.setFont(new Font("arial", 14));
+        lblCity.setFont(new Font("arial", 14));
+        lblPosition.setFont(new Font("arial", 14));
+        
         txtSearch.setPrefHeight(25.0);
         txtSearch.setPrefWidth(227.0);
         
@@ -118,11 +131,15 @@ public class SearchStage {
         txtName.setEditable(false);
         txtPosition.setEditable(false);
         
-        btnGoBack.setLayoutX(14.0);
+        btnGoBack.setLayoutX(24.0);
         btnGoBack.setLayoutY(29.0);
+        btnGoBack.getStyleClass().add("button");
+        btnGoBack.getStyleClass().add("navigationButton");
         
         radCity.setToggleGroup(tgSearchFilters);
+        radCity.setFont(new Font("arial", 14));
         radPosition.setToggleGroup(tgSearchFilters);
+        radPosition.setFont(new Font("arial", 14));
         radCity.setSelected(true);
         
         
@@ -132,19 +149,43 @@ public class SearchStage {
         
         btnFirst.setPrefHeight(22.0);
         btnFirst.setPrefWidth(90.0);
+        btnFirst.getStyleClass().add("button");
+        btnFirst.getStyleClass().add("navigationButton");
         
         btnPrevious.setPrefHeight(22.0);
         btnPrevious.setPrefWidth(90.0);
+        btnPrevious.getStyleClass().add("button");
+        btnPrevious.getStyleClass().add("navigationButton");
         
         btnNext.setPrefHeight(22.0);
         btnNext.setPrefWidth(90.0);
+        btnNext.getStyleClass().add("button");
+        btnNext.getStyleClass().add("navigationButton");
         
         btnLast.setPrefHeight(22.0);
         btnLast.setPrefWidth(90.0);
+        btnLast.getStyleClass().add("button");
+        btnLast.getStyleClass().add("navigationButton");
+        
+        btnSearch.getStyleClass().add("button");
+        btnSearch.getStyleClass().add("navigationButton");
         
         setUpRootPane();
         
         return rootPane;
+    }
+    
+    /**
+     * Returns to main menu
+     */
+    private void goBackToMainMenu() {
+        SalesFX mainMenu = new SalesFX();
+        try {
+            
+            mainMenu.start(new Stage());
+        } catch (IOException ex) {
+            Logger.getLogger(SearchStage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
@@ -159,7 +200,7 @@ public class SearchStage {
         
         rootPane.setPrefHeight(400.0);
         rootPane.setPrefWidth(505.0);
-        rootPane.getChildren().addAll(hBoxSearchPane, hBoxSearchFilter, lblSearchResultNum, hBoxEmployeeInfo, hBoxNavigation);
+        rootPane.getChildren().addAll(btnGoBack, hBoxSearchPane, hBoxSearchFilter, lblSearchResultNum, hBoxEmployeeInfo, hBoxNavigation);
         
     }
     
@@ -194,7 +235,7 @@ public class SearchStage {
      * Sets up the search filter pane
      */
     private void setUpSearchFilterPane() {
-        hBoxSearchFilter.setLayoutX(120.0);
+        hBoxSearchFilter.setLayoutX(94.0);
         hBoxSearchFilter.setLayoutY(80.0);
         hBoxSearchFilter.setSpacing(30.0);
         hBoxSearchFilter.getChildren().addAll(lblSearchFilter, radCity, radPosition);
@@ -204,7 +245,7 @@ public class SearchStage {
      * Sets up the navigation pane
      */
     private void setUpNavigationPane() {
-        hBoxNavigation.setLayoutX(80.0);
+        hBoxNavigation.setLayoutX(70.0);
         hBoxNavigation.setLayoutY(338.0);
         hBoxNavigation.setSpacing(5.0);
         hBoxNavigation.getChildren().addAll(btnFirst, btnPrevious, btnNext, btnLast);
@@ -214,8 +255,7 @@ public class SearchStage {
      * Performs a search
      */
     private void search(String query) {
-        System.out.println(employeeList.size());
-        searchResults = new ArrayList();
+        searchResults.clear();
         
         if(tgSearchFilters.getSelectedToggle().equals(radCity)) {
             for(Employee e: employeeList) {
@@ -229,9 +269,9 @@ public class SearchStage {
         
         else if(tgSearchFilters.getSelectedToggle().equals(radPosition)) {
             for(Employee e: employeeList) {
-                System.out.println(e.getPosition());
+                
                 if(e.getPosition().equals(query)) {
-                    System.out.println(searchResults.add(e));
+                    searchResults.add(e);
                 }
             }
         
@@ -261,13 +301,13 @@ public class SearchStage {
     }
     
     /**
-     * Sets up event handler for buttons
+     * Sets up event handlers for buttons
      */
     public void setUpEventHandlers() {
         btnPrevious.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(currentIndex == 0) {
+                if(currentIndex == 0 || searchResults.isEmpty()) {
                     Alert outOfBounds = new Alert(Alert.AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list.");
@@ -284,7 +324,7 @@ public class SearchStage {
         btnFirst.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(currentIndex == 0) {
+                if(currentIndex == 0 || searchResults.isEmpty()) {
                     Alert outOfBounds = new Alert(Alert.AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list.");
@@ -303,7 +343,7 @@ public class SearchStage {
         btnNext.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(currentIndex == searchResults.size() - 1) {
+                if(currentIndex == searchResults.size() - 1 || searchResults.isEmpty()) {
                     Alert outOfBounds = new Alert(Alert.AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list");
@@ -311,7 +351,6 @@ public class SearchStage {
                     return;
                 }
                 currentIndex++;
-                System.out.println(currentIndex);
                 Employee employee = navigateSearchResults(currentIndex);
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());
@@ -321,7 +360,7 @@ public class SearchStage {
         btnLast.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) { 
-                if(currentIndex == searchResults.size() - 1) {
+                if(currentIndex == searchResults.size() - 1 || searchResults.isEmpty()) {
                     Alert outOfBounds = new Alert(Alert.AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list");
@@ -338,14 +377,28 @@ public class SearchStage {
         btnSearch.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) { 
+               if(txtSearch.getText().equals("")) {
+                   Alert nullQuery = new Alert(Alert.AlertType.ERROR);
+                   nullQuery.setHeaderText("Nothing to Search");
+                   nullQuery.setContentText("Please enter a query to search for.");
+                   nullQuery.show();
+                   return;
+               }
                search(txtSearch.getText());
+            }
+        });
+        
+        btnGoBack.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                goBackToMainMenu();
             }
         });
         
     }
     
     /**
-     * 
+     * Navigates the search list
      * @param index the index of the employee in the list
      */
     private Employee navigateSearchResults(int index) {

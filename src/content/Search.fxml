@@ -14,7 +14,7 @@
       <HBox layoutX="99.0" layoutY="29.0" spacing="15.0">
          <children>
             <TextField fx:id="txtSearch" prefHeight="25.0" prefWidth="227.0" />
-            <Button fx:id="btSearch" mnemonicParsing="false" text="Search" />
+            <Button fx:id="btSearch" mnemonicParsing="false" styleClass="navButton" stylesheets="@../assets/css/styles.css" text="Search" />
          </children>
       </HBox>
       <HBox layoutX="120.0" layoutY="80.0" spacing="30.0">
@@ -52,7 +52,7 @@
       </Label>
       <HBox fx:id="hBoxNavigationPane" layoutX="80.0" layoutY="338.0" spacing="5.0">
          <children>
-            <Button fx:id="btFirst" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="First" />
+            <Button fx:id="btFirst" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" style="-fx-skin: #b6e7c9;" stylesheets="@../assets/css/login.css" text="First" />
             <Button fx:id="btPrevious" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Previous" />
             <Button fx:id="btNext" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Next" />
             <Button fx:id="btLast" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" styleClass="navigationBtn" stylesheets="@../assets/css/login.css" text="Last" />

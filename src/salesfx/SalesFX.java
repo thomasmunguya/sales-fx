@@ -18,23 +18,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.WindowEvent;
+
 /**
- *
- * @author MTH
- */
+ *  Group Member Names: (maximum of two people per group)
+ *  Group Member Student Numbers:
+ *  Final Project:
+ *  Date:
+*/
 public class SalesFX extends Application {
-    private VBox vBoxEmployeeInfo;
+    
+    private VBox vBoxEmployeeInfo = new VBox();
 
     
     private Label lblEmployeeInfo = new Label("Employee Information");
@@ -96,12 +94,12 @@ public class SalesFX extends Application {
     private Label lblSalesFX = new Label("SalesFX");
     
     
-    private AnchorPane rootPane;
+    private AnchorPane rootPane = new AnchorPane();
     
-    private HBox hBoxBlueDecor;
+    private HBox hBoxBlueDecor = new HBox();
     
     private SearchStage searchStageInstance;
-    
+   
     public static ArrayList<Employee> employeeList;
     private static int currentIndex = 0;
     private final Alert invalidInput  = new Alert(AlertType.ERROR);
@@ -109,6 +107,15 @@ public class SalesFX extends Application {
     
     @Override
     public void start(Stage primaryStage) throws IOException {
+        
+        lblId.setFont(new Font("arial", 14));
+        lblName.setFont(new Font("arial", 14));
+        lblCity.setFont(new Font("arial", 14));
+        lblPosition.setFont(new Font("arial", 14));
+        
+        hBoxBlueDecor.setId("blueDecor");
+        hBoxBlueDecor.setPrefHeight(64.0);
+        hBoxBlueDecor.setPrefWidth(505);
         
         lblEmployeeInfo.setTextFill(Paint.valueOf("#fffefe"));
         lblEmployeeInfo.setFont(new Font(20.0));
@@ -127,55 +134,83 @@ public class SalesFX extends Application {
         
         btnFirst.setPrefHeight(22.0);
         btnFirst.setPrefWidth(90.0);
+        btnFirst.getStyleClass().add("button");
+        btnFirst.getStyleClass().add("navigationButton");
         
         btnPrevious.setPrefHeight(22.0);
         btnPrevious.setPrefWidth(90.0);
+        btnPrevious.getStyleClass().add("button");
+        btnPrevious.getStyleClass().add("navigationButton");
         
         btnNext.setPrefHeight(22.0);
         btnNext.setPrefWidth(90.0);
+        btnNext.getStyleClass().add("button");
+        btnNext.getStyleClass().add("navigationButton");
         
         btnLast.setPrefHeight(22.0);
         btnLast.setPrefWidth(90.0);
+        btnLast.getStyleClass().add("button");
+        btnLast.getStyleClass().add("navigationButton");
        
         btnSearch.setLayoutX(213.0);
         btnSearch.setLayoutY(364.0);
         btnSearch.setPrefHeight(22.0);
         btnSearch.setPrefWidth(90.0);
+        btnSearch.getStyleClass().add("button");
+        btnSearch.getStyleClass().add("navigationButton");
         
         btnModifier1.setPrefHeight(64.0);
         btnModifier1.setPrefWidth(114.0);
+        btnModifier1.setId("modifierButton1");
+        btnModifier1.getStyleClass().add("button");
    
         btnModifier2.setPrefHeight(64.0);
         btnModifier2.setPrefWidth(114.0);
+        btnModifier2.setId("modifierButton2");
+        btnModifier2.getStyleClass().add("button");
     
         btnModifier3.setPrefHeight(64.0);
-        btnModifier3.setPrefWidth(114.0);    
+        btnModifier3.setPrefWidth(114.0);  
+        btnModifier3.setId("modifierButton3");
+        btnModifier3.getStyleClass().add("button");
         
         lblSalesFX.setLayoutX(334.0);
         lblSalesFX.setLayoutY(14.0);
         lblSalesFX.setTextFill(Paint.valueOf("#fcfcfc"));
+        lblSalesFX.setFont(new Font("Roboto", 44));
         
-       
+        //set up the panes and event handlers for buttons
         setUpRootPane();
-        Scene scene = new Scene(rootPane, 505, 400);
-        System.out.println(Thread.currentThread().getName());
-        primaryStage.setTitle("SalesFX");
-        primaryStage.setScene(scene);
-        primaryStage.show();
         loadList();
         setUpEventHandlers();
+        
+        Scene mainScene = new Scene(rootPane, 505, 400);
+        mainScene.getStylesheets().add("assets/css/styles.css");
+        primaryStage.setTitle("SalesFX");
+        primaryStage.setScene(mainScene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                EmployeeFile.writeToFile();
+            }
+            
+        });
+        
         
         btnSearch.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 searchStageInstance = SearchStage.loadSearchStage();
-                Scene scene =  new Scene(searchStageInstance.setUpSearchScene(), 505, 400);
+                Scene searchScene =  new Scene(searchStageInstance.setUpSearchScene(), 505, 400);
                 Stage searchStage = new Stage();
-                searchStage.setScene(scene);
+                searchScene.getStylesheets().add("assets/css/styles.css");
+                searchStage.setScene(searchScene);
+                searchStage.initModality(Modality.APPLICATION_MODAL);
                 searchStage.show();
-               
             }
-        } );
+        });
     }
 
     /**
@@ -186,9 +221,11 @@ public class SalesFX extends Application {
     }
     
     
+    /**
+     * Sets up the employee information pane
+     */
     private void setUpEmployeeInfoPane() {
         
-        vBoxEmployeeInfo = new VBox();
         vBoxEmployeeInfo.setLayoutX(22.0);
         vBoxEmployeeInfo.setLayoutY(24.0);
         vBoxEmployeeInfo.setSpacing(10.0);
@@ -198,7 +235,7 @@ public class SalesFX extends Application {
     
     
     /**
-     * Sets up the navigationPane
+     * Sets up the navigation pane
      */
     private void setUpNavigationPane() {
         
@@ -212,7 +249,7 @@ public class SalesFX extends Application {
     }
 //    
     /**
-     * Sets up the modifiers pane
+     * Sets up the pane for the modifier buttons
      */
     private void setUpModifiersPane() {
         vBoxModifiersPane.setLayoutX(366.0);
@@ -226,19 +263,15 @@ public class SalesFX extends Application {
      */
     private void setUpRootPane() {
         
-        hBoxBlueDecor = new HBox();
-        
         setUpEmployeeInfoPane();
         setUpModifiersPane();
         setUpNavigationPane();
         
-        rootPane = new AnchorPane();
         rootPane.getChildren().addAll(hBoxBlueDecor, lblSalesFX, vBoxEmployeeInfo, hBoxNavigationPane, btnSearch, vBoxModifiersPane);
-        
-//        setUpEmployeeInfoPane();
+
     }
     
-/**
+    /**
     * Populates the text fields
     * @param id the id to populate the id text field with
     * @param name the name to populate the name text field with
@@ -255,13 +288,13 @@ public class SalesFX extends Application {
     
     
     /**
-     * Sets up event handler for buttons
+     * Sets up event handlers for buttons
      */
-    public void setUpEventHandlers() {
+    private void setUpEventHandlers() {
         btnPrevious.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(currentIndex == 0) {
+                if(currentIndex == 0 || employeeList.isEmpty()) {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list.");
@@ -278,7 +311,7 @@ public class SalesFX extends Application {
         btnFirst.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(currentIndex == 0) {
+                if(currentIndex == 0 || employeeList.isEmpty()) {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list.");
@@ -297,7 +330,7 @@ public class SalesFX extends Application {
         btnNext.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(currentIndex == employeeList.size() - 1) {
+                if(currentIndex == employeeList.size() - 1 || employeeList.isEmpty()) {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list");
@@ -315,7 +348,7 @@ public class SalesFX extends Application {
         btnLast.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) { 
-                if(currentIndex == employeeList.size() - 1) {
+                if(currentIndex == employeeList.size() - 1 || employeeList.isEmpty()) {
                     Alert outOfBounds = new Alert(AlertType.INFORMATION);
                     outOfBounds.setHeaderText("Reached End of List");
                     outOfBounds.setContentText("You have reached the end of the list");
@@ -457,12 +490,11 @@ public class SalesFX extends Application {
         populateTextFields(employeeList.get(0).getId() + "", employeeList.get(0).getName(),
                         employeeList.get(0).getCity(), employeeList.get(0).getPosition());
       
-        
     }
   
     
     /**
-     * 
+     * Navigates the employee list
      * @param index the index of the employee in the list
      */
     private Employee navigateEmployeesList(int index) {
@@ -473,8 +505,7 @@ public class SalesFX extends Application {
     /**
      * Modifies the information of an employee
      */
-    @FXML
-    public void modifyEmployee() {
+    private void modifyEmployee() {
         
         //enable the employee information text fields during a modification
         txtId.setEditable(true);
@@ -498,8 +529,7 @@ public class SalesFX extends Application {
      * @param city the new city
      * @param position the new position
      */
-    @FXML
-    public void updateEmployee(int id, String name, String city, String position) {
+    private void updateEmployee(int id, String name, String city, String position) {
         Alert confirmUpdate = new Alert(Alert.AlertType.CONFIRMATION);
         confirmUpdate.setHeaderText("Confirm Update");
         confirmUpdate.setContentText("Are you sure you want to perform an update of this employee's information?");
@@ -526,7 +556,7 @@ public class SalesFX extends Application {
         btnModifier1.setText("Modify Employee");
     }
     
-    public void addEmployee(int id, String name, String city, String position) {
+    private void addEmployee(int id, String name, String city, String position) {
         
         Alert confirmAdd = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAdd.setHeaderText("Confirm Add");
@@ -607,35 +637,34 @@ public class SalesFX extends Application {
     /**
      * Deletes an employee
      */
-    public void deleteEmployee() {
+    private void deleteEmployee() {
         
+        //if the employeeList list is empty display a deletion error
+        if(employeeList.isEmpty()) {
+            Alert deleteFailure = new Alert(Alert.AlertType.ERROR);
+            deleteFailure.setHeaderText("Deletion Failed");
+            deleteFailure.setContentText("There's nothing to delete.");
+            deleteFailure.show();
+            return;
+        }
+      
         Alert confirmAdd = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAdd.setHeaderText("Confirm Delete");
         confirmAdd.setContentText("Are you sure you want to delete this employee's information?");
         Optional<ButtonType> choice = confirmAdd.showAndWait();
         
         if(choice.get() == ButtonType.OK) {
-            //if the employeeList list is empty display a deletion error
-            if(employeeList.isEmpty()) {
-                System.out.println("The list is empty now");
-                Alert deleteFailure = new Alert(Alert.AlertType.ERROR);
-                deleteFailure.setHeaderText("Deletion Failed");
-                deleteFailure.setContentText("There's nothing to delete");
-                deleteFailure.show();
-                return;
-            }
             
             if(employeeList.size() == 1) {
                 employeeList.remove(currentIndex);
-                currentIndex--;
                 populateTextFields("", "", "", "");
                 return;
             }
             
             employeeList.remove(currentIndex);
-            currentIndex--;
-            if(currentIndex == -1) {
-                currentIndex++;
+            
+            if(currentIndex == employeeList.size() - 1 && employeeList.size() != 1) {
+                currentIndex--;
                 Employee employee = navigateEmployeesList(currentIndex);
                 populateTextFields(employee.getId() + "", employee.getName(),
                         employee.getCity(), employee.getPosition());  

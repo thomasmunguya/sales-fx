@@ -57,4 +57,9 @@ public class Employee {
     public void setPosition(String position) {
         this.position = position;
     }
+    
+    @Override
+    public String toString() {
+        return "\"" + id + ", " + name + ", " + city + ", " + position + "\"\n";
+    }
 }
